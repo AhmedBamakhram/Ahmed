@@ -1,0 +1,38 @@
+1. IP/Port Scanning: (10 points)ack-scannerxmass-scannerfin-scannerSYN-scanner 
+def runsrv() :
+    ip_addr = input("Enter IP/Port for scanning: ")
+    print("The IP you entered is: ", ip_addr)	 
+    subprocess.call(["nmap","-sV", ip_addr])
+    return
+2. Network sniffer and save the result as a PCAP file in a given path.
+import socket, array
+
+def recv_fds(sock, msglen, maxfds):
+    fds = array.array("i")   # Array of ints
+    msg, ancdata, flags, addr = sock.recvmsg(msglen, socket.CMSG_LEN(maxfds * fds.itemsize))
+    for cmsg_level, cmsg_type, cmsg_data in ancdata:
+        if cmsg_level == socket.SOL_SOCKET and cmsg_type == socket.SCM_RIGHTS:
+            # Append data, ignoring any truncated integers at the end.
+            fds.frombytes(cmsg_data[:len(cmsg_data) - (len(cmsg_data) % fds.itemsize)])
+    return msg, list(fds)
+3. Cracking password using Johny (10 points)
+import hashlib
+flag =0
+pass_hash = input("Enter md5 hash: ")
+wordlist = input("File name: ")
+try:
+pass_file = open (wordlist, "r")
+except:
+print("No file found")
+quit()
+for word in pass_file:
+enc_wrd = word.encode('utf-8')
+digest = hashlib.md5(enc_wrd.strip().hexdigest())
+
+if digest == pass_hash:
+   print("password found")
+   print("password is " + word)
+   flag=1
+   break 
+   if flag ==0:
+     print("password/passphrass is not in the list")
